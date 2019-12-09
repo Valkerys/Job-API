@@ -1,11 +1,8 @@
-// libraries
-const { graphql } = require('graphql');
 const express = require('express');
 // middleware and query checking method
 const { checkKey } = require('../../tools');
 // GraphQL typedefs (schema) and resolvers (methods)
-const { userResolvers } = require('../controllers/resolvers/user.resolvers');
-const { userTypedefs } = require('../controllers/typeDefs/user.typedefs');
+const { toolResolvers } = require('../controllers/resolvers/Tool.resolvers');
 
 const router = express.Router();
 
@@ -19,7 +16,7 @@ router.post('/create', checkKey, async (req, res) => createTool(req.body, res));
 createTool = async (body, res) => {
   // get the parameters
   const {
-    name, dateAdded, quantity, toolId, inUse
+    name, dateAdded, quantity, inUse, description
   } = body;
 
 
@@ -43,7 +40,7 @@ createToolAccount = async (
   name, quantity, description
 ) => {
   // in the mutation functions, create a user
-  await userResolvers.Mutation.createTool({
+  await toolResolvers.Mutation.createTool({
     name,
     quantity,
     description

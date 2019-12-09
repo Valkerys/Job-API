@@ -4,8 +4,8 @@ const express = require('express');
 // middleware and query checking method
 const { checkKey, checkQuery } = require('../../tools');
 // GraphQL typedefs (schema) and resolvers (methods)
-const { userResolvers } = require('../controllers/resolvers/user.resolvers');
-const { userTypedefs } = require('../controllers/typeDefs/user.typedefs');
+const { toolResolvers } = require('../controllers/resolvers/Tool.resolvers');
+const { toolTypedefs } = require('../controllers/typeDefs/Tool.typedefs');
 
 const router = express.Router();
 
@@ -21,13 +21,13 @@ router.get('/name', checkKey, async (req, res) => getToolByName(req.body, res));
 router.get('/inuse', checkKey, async (req, res) => getToolByInUse(req.body, res));
 router.get('/all', checkKey, async (req, res) => getTools(req.body, res));
 
-// Get the User by its ID
+// Get the Tool by its ID
 getToolById = async (body, res) => {
 
   // make the GraphQL query
-  const result = await graphql(userTypedefs,
+  const result = await graphql(toolTypedefs,
     `{ getToolById(id: "${body.id}") { ${values} } }`,
-    userResolvers.Query).then(response => response.data);
+    toolResolvers.Query).then(response => response.data);
 
   // check the query for null or undefeined
   // I.E not found
@@ -37,32 +37,21 @@ getToolById = async (body, res) => {
   res.send(result.getToolById);
 };
 
-// Get the User by its Username
-getToolByName = async (body, res) => {
+// Get the Tool by its name
+getTools = async (body, res) => {
+  console.log(body);
+  const result = await toolResolvers.Query.getTools();
 
-  // make the GraphQL query
-  const result = await graphql(userTypedefs,
-    `{ getToolByName(name: "${body.name}") { ${values} } }`,
-    userResolvers.Query).then(response => response.data);
-
-  // check the query for null or undefeined
-  // I.E not found
-  if (checkQuery(result, res)) {
-    return;
-  }
-  result.getToolByName.password = undefined;
-  res.send(result.getToolByName);
+  res.send(result);
 };
 
-// Get the User by its Email
+// Get the Tool by its use
 getToolByInUse = async (body, res) => {
-  // remove 'password' if included from the values param
-  const values = removePasswordQuery(body.values);
 
   // make the GraphQL query
-  const result = await graphql(userTypedefs,
+  const result = await graphql(toolTypedefs,
     `{ getToolByInUse(email: "${body.inuse}") { ${values} } }`,
-    userResolvers.Query).then(response => response.data);
+    toolResolvers.Query).then(response => response.data);
 
   // check the query for null or undefeined
   // I.E not found
@@ -73,15 +62,15 @@ getToolByInUse = async (body, res) => {
   res.send(result.getToolByInUse);
 };
 
-// Get all of the Users
-getTools = async (body, res) => {
+// Get all of the Tools
+getToolByName = async (body, res) => {
   // remove 'password' if included from the values param
   const values = removePasswordQuery(body.values);
 
   // make the GraphQL query
-  const result = await graphql(userTypedefs,
+  const result = await graphql(toolTypedefs,
     `{ getTools { ${values} } }`,
-    userResolvers.Query).then(response => response.data);
+    toolResolvers.Query).then(response => response.data);
 
   // check the query for null or undefeined
   // I.E not found

@@ -22,8 +22,8 @@ const defs = `
         id: ID!
         name: String
         dataAdded: Date
-        quantity: Integer
-        quantityCheckedOut: Integer
+        quantity: Int
+        quantityCheckedOut: Int
         checkoutList: [Checkout]
         logs: [Log]
     }
@@ -34,7 +34,7 @@ const defs = `
     }
 
     type Mutation {
-        createTool(name: String!, quantity: Integer!): Tool!
+        createTool(name: String!, quantity: Int!): Tool!
     }
 `;
 

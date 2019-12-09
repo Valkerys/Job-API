@@ -5,18 +5,17 @@ const getTools = () => Tool.find();
 
 const getToolById = id => Tool.findById(id);
 
-const createTool = async (name, quantity) => {
+const createTool = async (name, quantity, description) => {
+  console.log(name, quantity, description);
   const dateAdded = new Date();
   const tool = new Tool({
     name,
-    quantity,
     dateAdded,
-    quantityCheckedOut: 0,
-    checkoutList: [],
-    logs: [],
+    quantity,
+    description,
+    inUse: false
   });
   await tool.save();
-  await updateLogs(tool._id, 'Tool', 'tool', 1, name);
   return tool;
 };
 
@@ -28,8 +27,8 @@ const toolResolvers = {
   },
   Mutation: {
     createTool: async ({
-      name, quantity
-    }) => createTool(name, quantity),
+      name, quantity, description
+    }) => createTool(name, quantity, description),
   }
 };
 
